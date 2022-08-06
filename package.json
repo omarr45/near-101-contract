@@ -1,0 +1,14 @@
+{
+  "name": "contract",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "near-sdk-as": "^3.2.3"
+  },
+  "scripts": {
+    "build": "yarn asb",
+    "deploy": "near deploy --accountId=near101.omar45.testnet --wasmFile=build/release/contract.wasm",
+    "b-deploy": "yarn asb && near deploy --accountId=near101.omar45.testnet --wasmFile=build/release/contract.wasm"
+  }
+}
