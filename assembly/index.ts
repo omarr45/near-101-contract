@@ -43,7 +43,7 @@ export function likeQuote(quoteId: string): string {
     throw new Error("attached deposit should equal to the quote's price");
   }
   if (quote.owner.toString() == context.sender.toString()) {
-    throw new Error("You cannot give a like to your comment");
+    throw new Error("You cannot give a like to your own comment");
   }
   ContractPromiseBatch.create(quote.owner).transfer(context.attachedDeposit);
   quote.incrementLikes();
