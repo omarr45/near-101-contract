@@ -25,3 +25,5 @@ export class Quote {
 }
 
 export const listedQuotes = new PersistentUnorderedMap<string, Quote>('lq');
+
+export const likedQuotes = new PersistentUnorderedMap<string, Array<string>>('ulq');
