@@ -26,6 +26,9 @@ export function likeQuote(quoteId: string): string {
   if (quote.price.toString() != context.attachedDeposit.toString()) {
     throw new Error("attached deposit should equal to the quote's price");
   }
+  if (quote.owner.toString() == context.sender.toString()) {
+    throw new Error("You cannot give a like to your comment");
+  }
   ContractPromiseBatch.create(quote.owner).transfer(context.attachedDeposit);
   quote.incrementLikes();
   listedQuotes.set(quote.id, quote);
