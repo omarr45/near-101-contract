@@ -1,5 +1,5 @@
 import { ContractPromiseBatch, context } from 'near-sdk-as';
-import { Quote, listedQuotes } from './model';
+import { Quote, likedQuotes, listedQuotes } from './model';
 
 export function addQuote(quote: Quote): string {
   let storedQuote = listedQuotes.get(quote.id);
@@ -29,5 +29,35 @@ export function likeQuote(quoteId: string): string {
   ContractPromiseBatch.create(quote.owner).transfer(context.attachedDeposit);
   quote.incrementLikes();
   listedQuotes.set(quote.id, quote);
+
+  // Get the old list of liked quotes
+  let userQuotes = likedQuotes.get(context.sender);
+
+  // Create a new list if it doesn't exist
+  if (!userQuotes) {
+    userQuotes = new Array<string>();
+  }
+
+  // Add the quote to the list
+  userQuotes.push(quoteId);
+
+  // Update the list in storage
+  likedQuotes.set(context.sender, userQuotes);
+
   return `${context.sender} liked "${quote.text}" with id ${quote.id} successfully`;
+}
+
+export function getUserQuotes(): Quote[] {
+  let quotes: Quote[] = [];
+
+  const values = likedQuotes.get(context.sender);
+  if (values) {
+    for (let i = 0; i < values.length; i++) {
+      const quote = getQuote(values[i]);
+      if (quote) {
+        quotes.push(quote);
+      }
+    }
+  }
+  return quotes;
 }
